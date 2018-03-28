@@ -1,0 +1,40 @@
+import numpy as np
+ 
+#x输入集，y label，l0输入层，l1隐藏层，syn0第一层权值
+# sigmoid function
+def nonlin(x,deriv=False):#sigmoid函数做映射
+    if(deriv==True):
+        return x*(1-x)
+    return 1/(1+np.exp(-x))
+ 
+# 数据集 3个输入节点，4个训练实例
+X = np.array([  [0,0,1],
+                [0,1,1],
+                [1,0,1],
+                [1,1,1] ])
+ 
+# 标签          
+y = np.array([[0,0,1,1]]).T#转置
+ 
+#随机设定权重
+np.random.seed(1)
+ 
+# 初始化权重 0 层大小为 3 ， l1 层大小为 1 
+syn0 = 2*np.random.random((3,1)) - 1
+ 
+for iter in xrange(10000):
+    # forward propagation
+    l0 = X
+    l1 = nonlin(np.dot(l0,syn0))#将 l0 与 syn0 进行矩阵相乘。然后，将计算结果传递给 sigmoid 函数
+ 
+    # 网络误差
+    l1_error = y - l1
+ 
+    # multiply how much we missed by the 
+    # slope of the sigmoid at the values in l1
+    l1_delta = l1_error * nonlin(l1,True)#误差项加权导数值
+ 
+    # update weights
+    syn0 += np.dot(l0.T,l1_delta)
+print "Output After Training:"
+print l1
